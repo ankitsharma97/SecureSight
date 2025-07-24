@@ -1,163 +1,79 @@
-# SecureSight CCTV Monitoring Dashboard
+# SecureSight: A Modern CCTV Monitoring Dashboard
 
-A comprehensive security monitoring dashboard for CCTV surveillance systems with real-time incident tracking, camera timeline visualization, and incident management capabilities.
+This project is my take on a comprehensive security dashboard for CCTV surveillance. The goal was to create a tool that's not just functional but also intuitive, allowing security personnel to monitor events in real-time, quickly investigate incidents, and manage everything from a single, clean interface.
 
-## 🚀 Features
+## 🚀 What It Does
 
-- **Real-time Incident Monitoring**: Live tracking of security incidents across multiple cameras
-- **Interactive Timeline**: 24-hour camera timeline with overlapping incident handling
-- **Incident Management**: Resolve incidents with optimistic UI updates
-- **Camera Feed Integration**: Support for multiple CCTV camera feeds
-- **Responsive Design**: Modern UI that works across all devices
-- **Real-time Updates**: Live time synchronization and incident status updates
+* **Live Incident Feed:** You get a real-time view of security flags as they happen, pulled from all connected cameras.
+* **Interactive 24-Hour Timeline:** I built a visual timeline for each camera that shows the entire day at a glance. Incidents are plotted on the timeline, and I made sure to handle overlapping events so nothing gets missed.
+* **One-Click Incident Resolution:** To keep the dashboard clean, operators can mark incidents as "resolved." This uses an optimistic UI update, so it feels instantaneous, while the change is saved in the background.
+* **Multi-Camera Support:** The system is designed to handle feeds and data from multiple CCTV cameras.
+* **Clean, Responsive UI:** It's built with a modern aesthetic and works smoothly whether you're on a large monitor or a tablet.
+* **Always in Sync:** The dashboard keeps the time and incident statuses updated automatically, so you're always looking at the latest information.
 
-## 🛠️ Tech Stack
+## 🛠️ The Tech Stack
+
+I chose a modern, full-stack TypeScript approach for this project.
 
 ### Frontend
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first CSS framework
-- **Shadcn/ui** - Modern component library
-- **Lucide React** - Icon library
 
-### Backend
-- **Next.js API Routes** - Serverless API endpoints
-- **Prisma ORM** - Database abstraction layer
-- **SQLite** - Local database for development
-- **TypeScript** - Full-stack type safety
+* **Next.js 15:** The new App Router is fantastic for this kind of application. Server Components and streaming make the dashboard feel fast and responsive.
+* **TypeScript:** A must-have for a project of this scale. It helps catch errors early and makes the code so much easier to maintain.
+* **Tailwind CSS & Shadcn/ui:** For the UI, this combination is a dream. It allowed me to build a polished, consistent, and fully responsive interface very quickly.
+* **Lucide React:** For a clean and consistent set of icons.
 
-### Database
-- **SQLite** - Lightweight, file-based database
-- **Prisma Schema** - Type-safe database schema
-- **Migrations** - Version-controlled database changes
+### Backend & Database
 
-## 📋 Prerequisites
+* **Next.js API Routes:** Kept the backend simple and co-located with the frontend code. Perfect for building out a quick, serverless API.
+* **Prisma & SQLite:** I love Prisma for its type safety—it basically writes the database queries for you. I used SQLite for the local development database because it's zero-config and just works. No need to spin up a separate database server.
 
-- Node.js 18+ 
-- npm or pnpm
-- Git
+## 📋 Getting It Running Locally
 
-## 🚀 Deployment Instructions
+1.  **Clone the repo:**
+    ```bash
+    git clone <repository-url>
+    cd security-dashboard
+    ```
 
-### Local Development
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd security-dashboard
-   ```
+3.  **Set up the environment:**
+    Create a `.env` file from the example file. This is where you'd put your database connection string.
+    ```bash
+    cp .env.example .env
+    ```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   pnpm install
-   ```
+4.  **Get the database ready:**
+    Prisma makes this part easy. These commands will set up the database schema and populate it with some sample data.
+    ```bash
+    # Generate the Prisma client
+    npx prisma generate
+    
+    # Run the initial migration
+    npx prisma migrate dev --name init
+    
+    # Seed the database with sample cameras and incidents
+    npm run db:seed
+    ```
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your database configuration
-   ```
+5.  **Start the server:**
+    ```bash
+    npm run dev
+    ```
+    You should now be able to see the dashboard at `http://localhost:3000`.
 
-4. **Initialize database**
-   ```bash
-   # Generate Prisma client
-   npx prisma generate
-   
-   # Run database migrations
-   npx prisma migrate dev --name init
-   
-   # Seed the database with sample data
-   npm run db:seed
-   ```
+## 🏗️ A Few Tech Decisions Explained
 
-5. **Start development server**
-   ```bash
-   npm run dev
-   ```
+### Why the Next.js App Router?
 
-6. **Open your browser**
-   Navigate to `http://localhost:3000`
+I went with the latest from Next.js because the App Router's architecture is a great fit. Using Server Components helps keep the client-side bundle small, and the ability to stream UI components makes the initial load feel much faster.
 
-### Production Deployment
+### The Database Schema
 
-#### Vercel (Recommended)
-
-1. **Connect your repository**
-   - Push code to GitHub/GitLab
-   - Connect repository to Vercel
-
-2. **Configure environment variables**
-   ```env
-   DATABASE_URL="your-production-database-url"
-   NODE_ENV="production"
-   ```
-
-3. **Deploy**
-   - Vercel will automatically detect Next.js
-   - Build and deploy on every push
-
-#### Docker Deployment
-
-1. **Build the image**
-   ```bash
-   docker build -t security-dashboard .
-   ```
-
-2. **Run the container**
-   ```bash
-   docker run -p 3000:3000 \
-     -e DATABASE_URL="your-database-url" \
-     -e NODE_ENV="production" \
-     security-dashboard
-   ```
-
-#### Database Setup for Production
-
-**Option 1: PostgreSQL (Recommended)**
-```bash
-# Update DATABASE_URL in .env
-DATABASE_URL="postgresql://user:password@host:port/database"
-
-# Run migrations
-npx prisma migrate deploy
-```
-
-**Option 2: MySQL**
-```bash
-# Update DATABASE_URL in .env
-DATABASE_URL="mysql://user:password@host:port/database"
-
-# Run migrations
-npx prisma migrate deploy
-```
-
-## 🏗️ Tech Decisions
-
-### Architecture Choices
-
-1. **Next.js App Router**
-   - **Why**: Latest Next.js features, improved performance, better SEO
-   - **Benefits**: Server components, streaming, improved caching
-
-2. **Prisma ORM**
-   - **Why**: Type-safe database operations, excellent developer experience
-   - **Benefits**: Auto-generated types, migrations, query optimization
-
-3. **SQLite for Development**
-   - **Why**: Zero-configuration, file-based, perfect for development
-   - **Benefits**: No server setup, easy backups, portable
-
-4. **Tailwind CSS + Shadcn/ui**
-   - **Why**: Rapid UI development, consistent design system
-   - **Benefits**: Utility classes, component library, responsive design
-
-5. **TypeScript**
-   - **Why**: Type safety across full-stack, better developer experience
-   - **Benefits**: Catch errors early, better IDE support, self-documenting code
-
-### Database Schema Design
+Here’s the basic structure for cameras and incidents in the `schema.prisma` file:
 
 ```prisma
 model Camera {
@@ -183,199 +99,125 @@ model Incident {
 }
 ```
 
-**Design Rationale:**
-- **CUID IDs**: URL-safe, collision-resistant identifiers
-- **Timestamps**: Full audit trail with created/updated times
-- **Relationships**: Proper foreign key constraints
-- **Nullable thumbnails**: Optional for different incident types
+I used `CUID`s for the primary keys because they are short, URL-friendly, and great for avoiding collisions. The timestamps give a clear audit trail, and I made the `thumbnailUrl` optional since not every incident type might have one.
 
-### API Design
+### Frontend Structure
 
-**RESTful Endpoints:**
-- `GET /api/incidents?resolved=false` - Fetch unresolved incidents
-- `PATCH /api/incidents/:id/resolve` - Toggle incident resolution
-- `GET /api/cameras` - Fetch cameras with latest incidents
+I tried to keep the project organization logical and scalable:
 
-**Design Principles:**
-- **Query parameters** for filtering
-- **HTTP status codes** for proper error handling
-- **Consistent response format** across all endpoints
-
-### Frontend Architecture
-
-**Component Structure:**
 ```
 app/
-├── page.tsx              # Main dashboard
-├── api/                  # API routes
-│   ├── incidents/
-│   └── cameras/
-├── layout.tsx            # Root layout
-└── globals.css           # Global styles
+├── page.tsx              # The main dashboard page
+├── api/                  # All backend API routes
+├── layout.tsx            # The root layout for the app
+└── globals.css           # A few global styles
 
 components/
-├── ui/                   # Shadcn/ui components
-└── theme-provider.tsx    # Theme configuration
+├── ui/                   # Re-usable components from Shadcn/ui
+└── theme-provider.tsx    # For light/dark mode
 
 hooks/
-├── use-incidents.ts      # Incident data fetching
-└── use-cameras.ts        # Camera data fetching
+├── use-incidents.ts      # Custom hook for fetching incident data
+└── use-cameras.ts        # Custom hook for camera data
 
 lib/
-├── prisma.ts            # Database client
-└── utils.ts             # Utility functions
+├── prisma.ts             # The Prisma client instance
+└── utils.ts              # Helper functions
 ```
 
 ## 🔮 If I Had More Time...
 
-### Immediate Improvements (1-2 weeks)
+This is a solid foundation, but there's always more to do! Here's where I'd take it next.
 
-- **🔐 Authentication & Authorization**
-  - JWT-based user authentication
-  - Role-based access control (Admin, Operator, Viewer)
-  - Session management with refresh tokens
+### Short-Term (Next couple of weeks)
 
-- **📊 Enhanced Analytics**
-  - Incident trend analysis and charts
-  - Camera performance metrics
-  - Real-time statistics dashboard
+* **Authentication:** Definitely the top priority. I'd add JWT-based auth with roles like Admin and Operator.
+* **Live Video Feeds:** Integrate WebRTC to stream live video directly into the dashboard.
+* **Real-time Notifications:** Use WebSockets to push updates to the UI instantly, rather than relying on polling. This would also power toast notifications for critical incidents.
 
-- **🎥 Live Video Integration**
-  - WebRTC for real-time video streaming
-  - Video recording and playback
-  - Frame capture and analysis
+### Medium-Term (1-2 months)
 
-- **🔔 Real-time Notifications**
-  - WebSocket integration for live updates
-  - Push notifications for critical incidents
-  - Email/SMS alerts for security personnel
+* **AI-Powered Detection:** This is where it gets really interesting. I'd love to integrate a computer vision model to automatically detect and classify threats, moving beyond simple motion alerts.
+* **Mobile App:** A simple React Native app for on-the-go monitoring and incident reporting would be a huge win.
+* **Analytics Dashboard:** Add some charts and graphs to visualize incident trends over time, helping to identify problem areas.
 
-### Medium-term Features (1-2 months)
+### Long-Term Vision
 
-- **🤖 AI-Powered Detection**
-  - Computer vision integration for automatic threat detection
-  - Machine learning models for incident classification
-  - Predictive analytics for security risks
+* **IoT Integration:** Connect to other smart devices like door locks or sensors. Imagine being able to lock down an area directly from the incident view.
+* **Advanced Search:** Implement a powerful search feature to quickly find past incidents by date, location, type, etc.
+* **Cloud Deployment:** Architect the application for the cloud using a microservices approach and Kubernetes for auto-scaling.
 
-- **📱 Mobile Application**
-  - React Native app for mobile monitoring
-  - Offline incident reporting
-  - GPS-based location tracking
+## 📝 API Docs
 
-- **🌐 Multi-tenant Architecture**
-  - Support for multiple organizations
-  - Isolated data and user management
-  - Custom branding per tenant
+Here's a quick overview of the available API endpoints.
 
-- **📈 Advanced Reporting**
-  - Custom report generation
-  - Export to PDF/Excel
-  - Scheduled report delivery
+#### `GET /api/incidents`
 
-### Long-term Vision (3-6 months)
+Fetches a list of incidents. Can be filtered by resolution status.
 
-- **🔗 IoT Integration**
-  - Smart sensor integration (motion, temperature, etc.)
-  - Automated door lock control
-  - Environmental monitoring
+**Query Params:**
 
-- **☁️ Cloud Infrastructure**
-  - Microservices architecture
-  - Kubernetes deployment
-  - Auto-scaling capabilities
+* `resolved` (boolean): Set to `true` or `false` to filter incidents.
 
-- **🔍 Advanced Search & Filtering**
-  - Full-text search across incidents
-  - Advanced filtering by time, location, type
-  - Saved search queries
+**Example Response:**
 
-- **🎨 Customization & Theming**
-  - Custom dashboard layouts
-  - Brand-specific theming
-  - Widget-based dashboard builder
-
-### Performance Optimizations
-
-- **⚡ Caching Strategy**
-  - Redis for session and data caching
-  - CDN for static assets
-  - Database query optimization
-
-- **📊 Monitoring & Logging**
-  - Application performance monitoring
-  - Error tracking and alerting
-  - Comprehensive logging system
-
-- **🔒 Security Enhancements**
-  - Rate limiting and DDoS protection
-  - Data encryption at rest and in transit
-  - Regular security audits
-
-## 📝 API Documentation
-
-### Endpoints
-
-#### GET /api/incidents
-Fetch incidents with optional filtering.
-
-**Query Parameters:**
-- `resolved` (boolean): Filter by resolution status
-
-**Response:**
 ```json
 [
   {
-    "id": "string",
-    "cameraId": "string",
-    "type": "string",
-    "tsStart": "2025-01-15T10:30:00Z",
-    "tsEnd": "2025-01-15T10:32:00Z",
-    "thumbnailUrl": "string",
+    "id": "clxql0v9v0000z49v5e3g6a2b",
+    "cameraId": "clxql0v9s0000z49v1a2b3c4d",
+    "type": "Motion Detected",
+    "tsStart": "2025-07-24T10:30:00Z",
+    "tsEnd": "2025-07-24T10:32:00Z",
+    "thumbnailUrl": "/thumbnails/incident-1.jpg",
     "resolved": false,
     "camera": {
-      "id": "string",
-      "name": "string",
-      "location": "string"
+      "id": "clxql0v9s0000z49v1a2b3c4d",
+      "name": "CAM-01",
+      "location": "Main Entrance"
     }
   }
 ]
 ```
 
-#### PATCH /api/incidents/:id/resolve
-Toggle incident resolution status.
+#### `PATCH /api/incidents/:id/resolve`
 
-**Response:**
+Toggles the `resolved` status of a single incident.
+
+**Example Response:**
+
 ```json
 {
-  "id": "string",
+  "id": "clxql0v9v0000z49v5e3g6a2b",
   "resolved": true,
   "camera": {
-    "id": "string",
-    "name": "string",
-    "location": "string"
+    "id": "clxql0v9s0000z49v1a2b3c4d",
+    "name": "CAM-01",
+    "location": "Main Entrance"
   }
 }
 ```
 
-#### GET /api/cameras
-Fetch all cameras with their latest incidents.
+#### `GET /api/cameras`
 
-**Response:**
+Fetches a list of all cameras and their most recent incidents.
+
+**Example Response:**
+
 ```json
 [
   {
-    "id": "string",
-    "name": "string",
-    "location": "string",
+    "id": "clxql0v9s0000z49v1a2b3c4d",
+    "name": "CAM-01",
+    "location": "Main Entrance",
     "incidents": [
       {
-        "id": "string",
-        "type": "string",
-        "tsStart": "2025-01-15T10:30:00Z",
-        "tsEnd": "2025-01-15T10:32:00Z",
+        "id": "clxql0v9v0000z49v5e3g6a2b",
+        "type": "Motion Detected",
+        "tsStart": "2025-07-24T10:30:00Z",
+        "tsEnd": "2025-07-24T10:32:00Z",
         "resolved": false
       }
     ]
   }
 ]
-```
